@@ -1,0 +1,43 @@
+{
+  "name": "@zoomus/chatbot-cli",
+  "version": "0.1.0",
+  "description": "create zoom bot quickly",
+  "keywords": [
+    "marketplace",
+    "zoom",
+    "express",
+    "chatbot",
+    "api",
+    "serverless",
+    "lambda"
+  ],
+  "scripts": {
+    "test": "jest --config  ./jest.config.js",
+    "eslint-fix": "eslint index.js src/** --fix"
+  },
+  "main": "index.js",
+  "bin": {
+    "zoomchatbot": "./index.js"
+  },
+  "author": "fox",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "cliui": "^4.1.0",
+    "commander": "^2.19.0",
+    "cross-spawn": "^6.0.5",
+    "fs-extra": "^7.0.1",
+    "inquirer": "^6.2.2",
+    "json-format": "^1.0.1",
+    "testapp": "0.0.0",
+    "update-notifier": "^3.0.1"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.8.4",
+    "babel-jest": "^25.1.0",
+    "babel-plugin-rewire": "^1.2.0",
+    "eslint": "^5.16.0",
+    "jest": "^25.1.0",
+    "rewire": "^4.0.1"
+  }
+}
