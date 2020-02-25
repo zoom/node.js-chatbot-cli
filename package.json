@@ -1,12 +1,12 @@
 {
   "name": "@zoomus/chatbot-cli",
-  "version": "0.1.0",
-  "description": "create zoom bot quickly",
+  "version": "0.1.2",
+  "description": "Zoom Node.js Chatbot Command Line Interface",
   "keywords": [
-    "marketplace",
     "zoom",
-    "express",
     "chatbot",
+    "marketplace",
+    "express",
     "api",
     "serverless",
     "lambda"
@@ -19,7 +19,26 @@
   "bin": {
     "zoomchatbot": "./index.js"
   },
-  "author": "fox",
+  "homepage": "https://github.com/zoom/node.js-chatbot-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoom/node.js-chatbot-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zoom/node.js-chatbot-cli/issues"
+  },
+  "author": "Fox Jiang",
+  "contributors": [
+    {
+      "name": "Zach Zheng"
+    },
+    {
+      "name": "Tommy Gaessler"
+    },
+    {
+      "name": "Benjamin Dean"
+    }
+  ],
   "license": "Apache-2.0",
   "dependencies": {
     "chalk": "^2.4.2",
