@@ -19,6 +19,8 @@ This is a cli package that automatically sets up a Node.js Zoom chatbot project 
 
 ## Setup & Features
 
+This app is base on node [express](https://expressjs.com/),and [nodejs](https://nodejs.org/en/) version >= 8.*
+
 See [marketplace docs](https://marketplace.zoom.us/docs/guides/chatbots/build-a-chatbot) to learn how to create bot and get information you need to paste into your code's environment variables file: `.development.env` for general mode, `serverless.development.json` for serverless mode.
 
 Here you will see either `.development.env` for general mode or `serverless.development.json` for serverless mode. You will need to fill this out with your bot's information. Below is an example screenshot:
@@ -28,16 +30,22 @@ Here you will see either `.development.env` for general mode or `serverless.deve
 You will also see a file called `botConfig.js`. In this file, we can add features to our bot. Let's go over the sections of `botConfig.js`:
 
 
-* `apis`: Configure api endpoints for your bot, please read comments in below code to understand it. Basically, when your bot receives a request, we will call the function specified in `callback` and auto inject useful objects into res.locals for you to use.see [chatbot](https://www.npmjs.com/package/@zoomus/chatbot) to get more details of zoomApp, zoomWebhook.
+### 1. **`apis`,configure api endpoints for your bot**
+Basically, when your bot receives a request, we will call the function specified in `callback` and auto inject useful objects into res.locals for you to use.
 
-   ```js
-   //zoomType = 'command'|'auth'
-   //command type is match to zoom marketplace botendpoint url bind,just like https://.../command
-   //auth type is match to zoom marketplace auth redirect url bind,like https://.../auth
-   //will auto inject zoomApp & zoomWebhook & zoomError in command type callback(callback details in botCommands and botActions)
-   //will auto inject zoomApp & zoomError in auth type callback.If zoomError not toBeFalsy,you can see zoomError about error message from middleware
-   //zoomApp can use for sendMessage,request zoom openapi,you can see ./src example code and  @zoomus/chatbot for more details
+There are two special api type,one is **Redirect URL for OAuth**(zoomType:'auth'),another is **Bot endpoint URL**(zoomType:'command').
 
+zoomType:'command' is the webhook url(https://your url/command) to bind in zoom [marketplace](https://marketplace.zoom.us).This type api not need bind callback,app will help to transfer the webhook informations to botCommands&&botActions.
+
+In zoomType='auth',let {zoomApp,botLog,databaseModels?,request}=res.locals can be used. In zoomApp you can auto get zoom access_token information.
+
+In zoomType='command',let {zoomApp,zoomWebhook,botLog,databaseModels?,request}=res.locals can be used in botActions&&botCommands config.
+
+In other general apis, let {zoomApp,botLog,databaseModels?,request}=req.locals can be used.
+
+in the docs bottom ,you can see the api section of **zoomApp,zoomWebhook,zoomError,botLog,databaseModels,request**.And in your **./src directory**,you can see the example code of these injected instances.
+
+```js
    apis: [{
        url: '/command',
        method: 'post',
@@ -55,12 +63,12 @@ You will also see a file called `botConfig.js`. In this file, we can add feature
        callback: function(req, res, next) {}
      } //it is a general api
    ]
-   ```
+```
 
+### 2. **`botCommands`: Configure your bot’s slash.**
+When your bot's user's enter commands, it will call the function specified in the `callback` for that command. *let {zoomApp,zoomWebhook,botLog,databaseModels?,request}=res.locals* will be injeced in callback
 
-* `botCommands`: Configure your bot’s commands. When your bot's user's enter commands, it will call the function specified in the `callback` for that command. We again will auto inject useful objects (zoomApp, zoomWebhook, zoomError) into res.locals for you to use in your callback function.
-
-   ```js
+```js
    botCommands: [{
        command: 'help',
        callback: require('./src/help.js')
@@ -69,11 +77,14 @@ You will also see a file called `botConfig.js`. In this file, we can add feature
        callback: require('./src/noCommand.js') // no matched command,will call this function
      }
    ]
-   ```
+```
 
-* `botActions`: Configure your bot’s UI actions, trigger callback whenever a user presses a button, clicks a dropdown, edits a textbox, etc on your bot’s messages. For more command types, please see [zoom-message-with-buttons](https://marketplace.zoom.us/docs/guides/chatbots/customizing-messages/message-with-buttons).
+### 3.  **`botActions`: Configure your bot’s UI actions**
+trigger callback whenever a user presses a button, clicks a dropdown, edits a textbox, etc on your bot’s messages. For more command types, please see [zoom-message-with-buttons](https://marketplace.zoom.us/docs/guides/chatbots/customizing-messages/message-with-buttons).
 
-   Zoom supports `interactive_message_select`, `interactive_message_actions`, `interactive_message_editable`, and `interactive_message_fields_editable` types. You can see [zoom-message-with-dropdown](https://marketplace.zoom.us/docs/guides/chatbots/customizing-messages/message-with-dropdown) for more details.
+Zoom supports `interactive_message_select`, `interactive_message_actions`, `interactive_message_editable`, and `interactive_message_fields_editable` types. You can see [zoom-message-with-dropdown](https://marketplace.zoom.us/docs/guides/chatbots/customizing-messages/message-with-dropdown) for more details.
+
+*let {zoomApp,zoomWebhook,botLog,databaseModels?,request}=res.locals* will be injeced in callback
 
    ```js
    botActions: [{
@@ -83,9 +94,13 @@ You will also see a file called `botConfig.js`. In this file, we can add feature
    ```
 
 
-* `log`: Raw http request information which you can use to perform logging(we use node-fetch to request http).
+### 4. **`log`: Raw http request information which you can use to perform logging.**
 
-   ```js
+default support three log types,the first one is http that request zoom openapi&auth&sendmessage.The second one is webhook that ZOOM IM request the bot app.The last one is error_notice type,it is triggered by http&webhook error happens
+
+If you use *let {request}=res.locals* to request other platform openapi,we also log the http information in the callback. (Request is the method which wrap [node-fetch](https://www.npmjs.com/package/node-fetch) and put form-data and form-parameters in simple object)
+
+```js
    //auto support three types log which you can see in this function
    info: {
      type: 'http',
@@ -121,7 +136,7 @@ You will also see a file called `botConfig.js`. In this file, we can add feature
    log: function(info) {
      console.log(info.type, info.message.request.url);
    }
-   ```
+  ```
 
    You can also log information in callback function, we will inject botLog instance after you bind log in botConfig.
 
@@ -140,6 +155,135 @@ You will also see a file called `botConfig.js`. In this file, we can add feature
      });
    }
    ```
+
+
+### 5. **res.locals in callback**
+
+* in zoomType='auth',let {zoomApp,botLog,databaseModels?,request}=res.locals can be used
+* in zoomType='command' which used botCommands&&botActions,let {zoomApp,zoomWebhook,botLog,databaseModels?,request}=res.locals can be used.
+* in general apis,let {zoomApp,botLog,databaseModels?,request}=req.locals can be used.
+
+
+you can see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of these instance, and in your **./src** directory you can see the template code.
+
+
+**zoomError**
+when some error happen in internal middleware,will have zoomError in locals
+
+```js
+let { zoomError } = res.locals;
+if(!zoomError){
+  //do sendmessage and other logic
+}
+catch(e){
+  console.log(e);
+}
+
+```
+
+**zoomApp**
+you can use zoomApp to sendMessage,request openapi
+
+sendMessage example code,feedback the message from webhook channel.
+
+```js
+let { zoomApp, zoomWebhook } = res.locals;
+let { type, payload } = zoomWebhook;
+let { toJid, userJid, accountId } = payload;
+await zoomApp.sendMessage({ to_jid: toJid, account_id: accountId, user_jid: userJid, is_visible_you: true, content: { head: { type: 'message', text: `Hi there - I'm ${process.env.NAME} bot`, style: { bold: true } }, body: [ { type: 'message', text: 'Here are some quick tips to get started!' }, { type: 'message', text: 'vote', style: { bold: true } }, { type:'message', text:'Click a button to vote your Favorite food' }, { type: 'message', text: 'meet', style: { bold: true } }, { type:'message', text:'get your meet url' } ] } });
+```
+
+request ZOOM open api(see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of zoomApp request openapi)
+
+```js
+let { zoomApp, zoomWebhook } = res.locals;
+let { type, payload } = zoomWebhook;
+let { toJid, userJid, userId, accountId } = payload;
+zoomApp.auth.setTokens({
+  access_token: database.get('access_token'),
+  refresh_token: database.get('refresh_token'),
+  expires_date: database.get('expires_date')
+});
+zoomApp.auth.callbackRefreshTokens(async function(tokens,error) {
+  if(error){
+    //try use refresh token to get access_token,but also fail,refresh token is invalid
+  }
+  else{
+    try {
+      await database.update(...);//update tokens in database 
+    } catch (e) {
+      console.log(e);
+    }
+  }
+});
+
+let meetingInfo = await zoomApp.request({
+  url: `/v2/users/${userId}/meetings`,
+  method: 'post',
+  headers: { 'content-type': 'application/json' },
+  body: {
+    topic: `New ${process.env.app} Meeting`,
+    type: 2,
+    settings: {
+      host_video: true,
+      participant_video: true,
+      join_before_host: true,
+      enforce_login: true,
+      mute_upon_entry: true
+    }
+  }
+});
+
+```
+
+
+**zoomWebhook**
+
+get ZOOM IM channel/bot information from the webhook(see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of zoomWebhook)
+
+```js
+let { zoomWebhook } = res.locals;
+let { type, payload } = zoomWebhook;// type = 'channel'|'bot'
+let { toJid, userJid, userId, accountId } = payload;
+// do the logic
+```
+
+**botLog**
+
+```js
+let {botLog}=res.locals;
+//this message will run log(function(info){..}) in your botConfig.js
+botLog({
+  type:'',
+  message:{error:..}
+});
+
+```
+
+**databaseModels**
+you can this after bind useDatabase in botConfig.js,see the detail in the bottom document
+
+
+**request**
+
+Request is the method which wrap [node-fetch](https://www.npmjs.com/package/node-fetch) and put form-data and form-parameters in simple object
+
+use request can auto call bot(function(info){}) in your botConfig.js,you can log everything in one function.
+
+see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of request
+
+```js
+//request other platform openapi,just like slack openapi.
+
+let {request}=res.locals;
+request({
+  url:string,
+  method:'post',
+  headers:{},
+  body:{a:1,b:2}
+});
+
+```
 
 
 ## Included Demos
