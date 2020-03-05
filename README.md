@@ -80,7 +80,7 @@ When your bot's user's enter commands, it will call the function specified in th
 ```
 
 ### 3.  **`botActions`: Configure your bot’s UI actions**
-trigger callback whenever a user presses a button, clicks a dropdown, edits a textbox, etc on your bot’s messages. For more command types, please see [zoom-message-with-buttons](https://marketplace.zoom.us/docs/guides/chatbots/customizing-messages/message-with-buttons).
+Triggers callback whenever a user presses a button, clicks a dropdown, edits a textbox, etc on your bot’s messages. For more command types, please see [zoom-message-with-buttons](https://marketplace.zoom.us/docs/guides/chatbots/customizing-messages/message-with-buttons).
 
 Zoom supports `interactive_message_select`, `interactive_message_actions`, `interactive_message_editable`, and `interactive_message_fields_editable` types. You can see [zoom-message-with-dropdown](https://marketplace.zoom.us/docs/guides/chatbots/customizing-messages/message-with-dropdown) for more details.
 
@@ -96,9 +96,9 @@ Zoom supports `interactive_message_select`, `interactive_message_actions`, `inte
 
 ### 4. **`log`: Raw http request information which you can use to perform logging.**
 
-default support three log types,the first one is http that request zoom openapi&auth&sendmessage.The second one is webhook that ZOOM IM request the bot app.The last one is error_notice type,it is triggered by http&webhook error happens
+The default supports three log types, the first are requests that calls a Zoom API or sends a Zoom message. The second one are commands that users type into the Zoom Chat. The last one is error_notice type, and it is triggered by request errors on both sides.
 
-If you use *let {request}=res.locals* to request other platform openapi,we also log the http information in the callback. (Request is the method which wrap [node-fetch](https://www.npmjs.com/package/node-fetch) and put form-data and form-parameters in simple object)
+If you use *let {request}=res.locals* to request other platform's api, you can also log the http information in the callback. (Request is the method which wrap [node-fetch](https://www.npmjs.com/package/node-fetch) and put form-data and form-parameters in simple object)
 
 ```js
    //auto support three types log which you can see in this function
@@ -159,9 +159,9 @@ If you use *let {request}=res.locals* to request other platform openapi,we also 
 
 ### 5. **res.locals in callback**
 
-* in zoomType='auth',let {zoomApp,botLog,databaseModels?,request}=res.locals can be used
-* in zoomType='command' which used botCommands&&botActions,let {zoomApp,zoomWebhook,botLog,databaseModels?,request}=res.locals can be used.
-* in general apis,let {zoomApp,botLog,databaseModels?,request}=req.locals can be used.
+* in zoomType='auth',let {zoomApp,botLog,databaseModels,request}=res.locals can be used
+* in zoomType='command' which used botCommands&&botActions,let {zoomApp,zoomWebhook,botLog,databaseModels,request}=res.locals can be used.
+* in general apis,let {zoomApp,botLog,databaseModels,request}=req.locals can be used.
 
 
 you can see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of these instance, and in your **./src** directory you can see the template code.
@@ -193,7 +193,7 @@ let { toJid, userJid, accountId } = payload;
 await zoomApp.sendMessage({ to_jid: toJid, account_id: accountId, user_jid: userJid, is_visible_you: true, content: { head: { type: 'message', text: `Hi there - I'm ${process.env.NAME} bot`, style: { bold: true } }, body: [ { type: 'message', text: 'Here are some quick tips to get started!' }, { type: 'message', text: 'vote', style: { bold: true } }, { type:'message', text:'Click a button to vote your Favorite food' }, { type: 'message', text: 'meet', style: { bold: true } }, { type:'message', text:'get your meet url' } ] } });
 ```
 
-request ZOOM open api(see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of zoomApp request openapi)
+request Zoom api(see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of zoomApp request openapi)
 
 ```js
 let { zoomApp, zoomWebhook } = res.locals;
@@ -239,7 +239,7 @@ let meetingInfo = await zoomApp.request({
 
 **zoomWebhook**
 
-get ZOOM IM channel/bot information from the webhook(see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of zoomWebhook)
+Get Zoom Chat channel/bot information from the commands that users type(see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of zoomWebhook)
 
 ```js
 let { zoomWebhook } = res.locals;
@@ -261,14 +261,14 @@ botLog({
 ```
 
 **databaseModels**
-you can this after bind useDatabase in botConfig.js,see the detail in the bottom document
+You can use this after binding useDatabase models in botConfig.js, please see the "Database" section at the bottom of this document
 
 
 **request**
 
-Request is the method which wrap [node-fetch](https://www.npmjs.com/package/node-fetch) and put form-data and form-parameters in simple object
+Request is the method which wrap [node-fetch](https://www.npmjs.com/package/node-fetch) and puts form-data and form-parameters in simple object
 
-use request can auto call bot(function(info){}) in your botConfig.js,you can log everything in one function.
+Request will auto call the logging function bot(function(info){}) in your botConfig.js,you can then implement that function to log whatever you wish to log.
 
 see [zoom chatbot libaray](https://www.npmjs.com/package/@zoomus/chatbot) to see more details of request
 
