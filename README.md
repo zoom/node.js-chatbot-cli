@@ -293,7 +293,9 @@ If you wish to quickly see a demo of how to use this package.
 ### Prerequisites:
 
 The demo runs DynamoDB, so you must have Java installed on your computer, as well as AWS CLI set up. To Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-After installing, run `aws configure`, then configure your access key Id, and secret access key, (These two values don’t have to be real, can just be made up for local testing).
+After installing, run `aws configure`, then configure your access key Id, and secret access key, (These two values don’t have to be real, can just be made up for local testing). You should be admin privileges on your computer and you should have a chatbot app set up on marketplace with the following scopes:
+
+![scopes](https://s3.amazonaws.com/user-content.stoplight.io/10128/1586393123802)
 
 To run demo:
 
@@ -315,7 +317,7 @@ To run demo:
 
 ## Database
 
-`useDatabase`: Although you can write database code in your callback function directly, we also support database config in `botConfig.js`. Once you declare your database functions in `useDatabase`, we will auto inject an object called `databaseModels` into res.locals of each callback. `databaseModels` will contain the functions you defined in `useDatabase`. Below is an example code using DynamoDB as an example:(see [botdynamodb](https://www.npmjs.com/package/botdynamodb) for how to write a custom database package, see [botdblocal](https://www.npmjs.com/package/botdblocal) for how to create local dynamodb tables).
+`useDatabase`: This section is totally optional. You can connect to your database anyway you see fit, however, we also support database config in `botConfig.js`. Once you construct your database object in `useDatabase`, we will auto inject an object called `databaseModels` into res.locals of each callback. `databaseModels` will be constructed using "lib" and "option" you defined in `useDatabase`. Below is an example code using DynamoDB as an example:(see [botdynamodb](https://www.npmjs.com/package/botdynamodb) for how to write a custom database package, see [botdblocal](https://www.npmjs.com/package/botdblocal) for how to create local dynamodb tables).
 
 ```js
 useDatabase: {
