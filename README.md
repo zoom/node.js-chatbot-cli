@@ -365,7 +365,6 @@ await databaseModels.zoom.save({
 
 * To run tests, run `$ npm run test`. Feel free to modify/add to the `tests` directory.
 
-## Need Support?
-The first place to look for help is on our [Developer Forum](https://devforum.zoom.us/), where Zoom Marketplace Developers can ask questions for public answers.
+## Need help?
 
-If you can’t find the answer in the Developer Forum or your request requires sensitive information to be relayed, please email us at developersupport@zoom.us.
+If you're looking for help, try [Developer Support](https://devsupport.zoom.us) or our [Developer Forum](https://devforum.zoom.us). Priority support is also available with [Premier Developer Support](https://zoom.us/docs/en-us/developer-support-plans.html) plans.
