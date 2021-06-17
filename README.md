@@ -1,4 +1,7 @@
 # Zoom Node.js Chatbot Command Line Interface
+
+Use of this CLI is subject to our [Terms of Use](https://zoom.us/docs/en-us/zoom_api_license_and_tou.html)
+
 This is a cli package that automatically sets up a Node.js Zoom chatbot project for you. This allows you to quickly start developing chatbots without having to worry about setting up a project, doing Zoom OAuth, and other boilerplate logic and allows you to immediately concentrate on developing your business logic.
 
 ## Installation
