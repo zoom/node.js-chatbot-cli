@@ -28,7 +28,7 @@ See [marketplace docs](https://marketplace.zoom.us/docs/guides/chatbots/build-a-
 
 Here you will see either `.development.env` for general mode or `serverless.development.json` for serverless mode. You will need to fill this out with your bot's information. Below is an example screenshot:
 
-![general](https://s3.amazonaws.com/user-content.stoplight.io/10128/1582241210819)
+![general](https://marketplace.zoom.us/docs/images/migrated/1582241210819.png)
 
 You will also see a file called `botConfig.js`. In this file, we can add features to our bot. Let's go over the sections of `botConfig.js`:
 
@@ -298,7 +298,7 @@ If you wish to quickly see a demo of how to use this package.
 The demo runs DynamoDB, so you must have Java installed on your computer, as well as AWS CLI set up. To Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
 After installing, run `aws configure`, then configure your access key Id, and secret access key, (These two values don’t have to be real, can just be made up for local testing). You should be admin privileges on your computer and you should have a chatbot app set up on marketplace with the following scopes:
 
-![scopes](https://s3.amazonaws.com/user-content.stoplight.io/10128/1586393123802)
+![scopes](https://marketplace.zoom.us/docs/images/migrated/1586393123802.png)
 
 To run demo:
 
