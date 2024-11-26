@@ -1,6 +1,6 @@
 {
   "name": "@zoomus/chatbot-cli",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Zoom Node.js Chatbot Command Line Interface",
   "keywords": [
     "zoom",
